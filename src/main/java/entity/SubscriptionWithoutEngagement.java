@@ -1,15 +1,21 @@
 package main.java.entity;
 
-import main.java.entity.Subscription;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class SubscriptionWithoutEngagement extends Subscription{
 
     public SubscriptionWithoutEngagement(){}
 
-    public SubscriptionWithoutEngagement(String serviceName, float monthlyAmount, Date startDate, Date endDate){
+    public SubscriptionWithoutEngagement(String serviceName, float monthlyAmount, LocalDateTime startDate, LocalDateTime endDate){
         super(serviceName,monthlyAmount,startDate,endDate);
+    }
+
+    public String toString(){
+        return "Subscription Without Engagement : \n" +
+                "Service Name : "+ this.getServiceName() +
+                "\nMonthly Amount : "+ this.getMonthlyAmount() +
+                "\nStart Date : "+ this.getStartDate() +
+                "\nEnd Date : "+ this.getEndDate();
     }
 
 }

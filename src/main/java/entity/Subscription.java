@@ -2,23 +2,21 @@ package main.java.entity;
 
 import main.java.util.Helper;
 
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 public abstract class Subscription {
 
     protected String id;
     protected String serviceName;
     protected float monthlyAmount;
-    protected Date startDate;
-    protected Date endDate;
+    protected LocalDateTime startDate;
+    protected LocalDateTime endDate;
     protected enum status{Active,Suspended,Terminated};
 
     public Subscription(){
         this.setId();
     }
-    Subscription(String serviceName,float monthlyAmount,Date startDate,Date endDate){
+    Subscription(String serviceName,float monthlyAmount,LocalDateTime startDate,LocalDateTime endDate){
         this.setId();
         this.serviceName = serviceName;
         this.monthlyAmount = monthlyAmount;
@@ -49,19 +47,19 @@ public abstract class Subscription {
         this.monthlyAmount = monthlyAmount;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 }
