@@ -12,7 +12,7 @@ public class Test {
         SubscriptionWithoutEngagement sub1 = new SubscriptionWithoutEngagement();
         sub1.setServiceName("OnlineCourses");
         sub1.setStartDate(LocalDateTime.now());
-        sub1.setEndDate(sub1.getStartDate().plusDays(30));
+        sub1.setEndDate(sub1.getStartDate());
         sub1.setMonthlyAmount(1200);
 
         SubscriptionWithEngagement sub2 = new SubscriptionWithEngagement();

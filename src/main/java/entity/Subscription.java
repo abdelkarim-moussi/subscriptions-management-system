@@ -1,5 +1,6 @@
 package main.java.entity;
 
+import main.java.enums.SubscriptionStatus;
 import main.java.util.Helper;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public abstract class Subscription {
     protected float monthlyAmount;
     protected LocalDateTime startDate;
     protected LocalDateTime endDate;
-    protected enum status{Active,Suspended,Terminated};
+    protected SubscriptionStatus status;
 
     public Subscription(){
         this.setId();
@@ -61,5 +62,13 @@ public abstract class Subscription {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public SubscriptionStatus getStatus(){
+        return this.status;
+    }
+
+    public void setStatus(SubscriptionStatus status){
+        this.status = status;
     }
 }
