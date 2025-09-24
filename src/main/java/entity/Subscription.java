@@ -71,4 +71,6 @@ public abstract class Subscription {
     public void setStatus(SubscriptionStatus status){
         this.status = status;
     }
+
+    public abstract Integer getMonthsEngagementPeriod();
 }

@@ -10,6 +10,11 @@ public class SubscriptionWithoutEngagement extends Subscription{
         super(serviceName,monthlyAmount,startDate,endDate);
     }
 
+    @Override
+    public Integer getMonthsEngagementPeriod() {
+        return null;
+    }
+
     public String toString(){
         return "Subscription Without Engagement : \n" +
                 "Service Name : "+ this.getServiceName() +

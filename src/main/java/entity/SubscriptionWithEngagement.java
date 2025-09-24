@@ -3,20 +3,21 @@ package main.java.entity;
 import java.time.LocalDateTime;
 
 public class SubscriptionWithEngagement extends Subscription{
-    private int monthsEngagementPeriod;
+    private Integer monthsEngagementPeriod;
 
     public SubscriptionWithEngagement() {}
 
-    public SubscriptionWithEngagement(String serviceName, float monthlyAmount, LocalDateTime startDate, LocalDateTime endDate, int monthsEngagementPeriod) {
+    SubscriptionWithEngagement(String serviceName, float monthlyAmount, LocalDateTime startDate, LocalDateTime endDate, int monthsEngagementPeriod) {
         super(serviceName, monthlyAmount, startDate, endDate);
         this.monthsEngagementPeriod = monthsEngagementPeriod;
     }
 
-    public int getMonthsEngagementPeriod() {
+    @Override
+    public Integer getMonthsEngagementPeriod() {
         return this.monthsEngagementPeriod;
     }
 
-    public void setMonthsEngagementPeriod(int monthsEngagementPeriod) {
+    public void setMonthsEngagementPeriod(Integer monthsEngagementPeriod) {
         this.monthsEngagementPeriod = monthsEngagementPeriod;
     }
 

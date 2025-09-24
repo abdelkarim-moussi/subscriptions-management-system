@@ -1,5 +1,7 @@
 package main.java.util;
 
+import main.java.enums.SubscriptionStatus;
+
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -22,4 +24,6 @@ public class Helper {
     public static Timestamp dateFormaterToDate(LocalDateTime date){
         return java.sql.Timestamp.valueOf(date);
     }
+
+
 }
