@@ -12,7 +12,7 @@ public class SubscriptionWithoutEngagement extends Subscription{
 
     @Override
     public Integer getMonthsEngagementPeriod() {
-        return null;
+        return 0;
     }
 
     public String toString(){

@@ -45,4 +45,12 @@ public class SubscriptionService {
             System.out.println(e.getMessage());
         }
     }
+
+    public void updateSubscription(String id ,LocalDateTime startDate,
+             LocalDateTime endDate,
+             Integer monthsEngagementPeriod ,
+             SubscriptionStatus status){
+
+    }
 }
+

@@ -1,6 +1,10 @@
 package main.java.dao;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import main.java.entity.Subscription;
+import main.java.entity.SubscriptionWithEngagement;
+import main.java.enums.SubscriptionStatus;
+import main.java.enums.SubscriptionType;
 import main.java.util.DataBaseConnection;
 import main.java.util.Helper;
 
@@ -16,7 +20,7 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
         try{
         Statement statement = connection.createStatement();
 
-        String insertSQL = "INSERT INTO subscriptions (id, servicename, monthlyamount, startdate, enddate, monthsengagementperiod,status) VALUES (? , ?, ?, ?, ?, ?, ?)";
+        String insertSQL = "INSERT INTO subscriptions (id, servicename, monthlyamount, startdate, enddate, monthsengagementperiod,status,subscriptionType) VALUES (? , ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
         insertStatement.setString(1,subscription.getId());
@@ -26,6 +30,13 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
         insertStatement.setTimestamp(5,Helper.dateFormaterToDate(subscription.getEndDate()));
         insertStatement.setInt(6,subscription.getMonthsEngagementPeriod());
         insertStatement.setObject(7,subscription.getStatus(),Types.OTHER);
+
+
+        if(subscription instanceof SubscriptionWithEngagement){
+            insertStatement.setObject(8, SubscriptionType.subscription_with_engagement,Types.OTHER);
+        }
+        else
+            insertStatement.setObject(8, SubscriptionType.subscription_without_engagement,Types.OTHER);
 
         int rowAffected = insertStatement.executeUpdate();
 
