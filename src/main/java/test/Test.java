@@ -31,11 +31,11 @@ public class Test {
 
     public static void createSub(){
         subscriptionService.createSubscription(
-                "QliExpress",
-                100,
+                "Orange",
+                40,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(30),
-                0, SubscriptionStatus.suspended);
+                0, SubscriptionStatus.terminated);
     }
 
     public static void updateSub(){
@@ -52,6 +52,10 @@ public class Test {
 
     public static void deleteSub(){
         subscriptionService.deleteSubscription("sub-35740342449062213816371332580601835317");
+    }
+
+    public static void allSubs(){
+        subscriptionService.getAllSubscriptions();
     }
 
 

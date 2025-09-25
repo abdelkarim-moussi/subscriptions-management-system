@@ -10,6 +10,7 @@ import main.java.util.DataBaseConnection;
 import main.java.util.Helper;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,String>{
@@ -137,7 +138,6 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
                             SubscriptionStatus.valueOf(storedSubscription.getString("status")),
                             storedSubscription.getInt("monthsengagementperiod")
                     );
-
                 }
             }
             storedSubscription.close();
@@ -149,8 +149,49 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
     }
 
     @Override
-    public Subscription findAll(String s) throws SQLException {
-        return null;
+    public List <Subscription> findAll() throws SQLException {
+
+        List <Subscription> subscriptions = new ArrayList<>();
+
+        String selectAllSql = "SELECT * FROM subscriptions";
+
+        try(Statement selectAllStatement = connection.createStatement()){
+
+            ResultSet resultSet = selectAllStatement.executeQuery(selectAllSql);
+
+            while(resultSet.next()){
+                if(resultSet.getString("subscriptiontype") != null){
+                    if (resultSet.getString("subscriptiontype").equals(SubscriptionType.subscription_without_engagement.toString())) {
+                        Subscription subscription = new SubscriptionWithoutEngagement(
+                                resultSet.getString("servicename"),
+                                resultSet.getFloat("monthlyamount"),
+                                resultSet.getTimestamp("startdate").toLocalDateTime(),
+                                resultSet.getTimestamp("enddate").toLocalDateTime(),
+                                SubscriptionStatus.valueOf(resultSet.getString("status"))
+                        );
+
+                        subscriptions.add(subscription);
+
+                    } else if (resultSet.getString("subscriptiontype").equals(SubscriptionType.subscription_with_engagement.toString())) {
+
+                        Subscription subscription = new SubscriptionWithEngagement(
+                                resultSet.getString("servicename"),
+                                resultSet.getFloat("monthlyamount"),
+                                resultSet.getTimestamp("startdate").toLocalDateTime(),
+                                resultSet.getTimestamp("enddate").toLocalDateTime(),
+                                SubscriptionStatus.valueOf(resultSet.getString("status")),
+                                resultSet.getInt("monthsengagementperiod")
+                        );
+                        subscriptions.add(subscription);
+                    }
+                }
+
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return subscriptions;
     }
 
 }

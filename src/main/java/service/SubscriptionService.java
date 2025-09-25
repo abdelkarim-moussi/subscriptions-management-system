@@ -8,6 +8,8 @@ import main.java.entity.SubscriptionWithoutEngagement;
 import main.java.enums.SubscriptionStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SubscriptionService {
 
@@ -101,6 +103,19 @@ public class SubscriptionService {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public List <Subscription> getAllSubscriptions(){
+
+        try{
+            List <Subscription> subscriptions = subscriptionDAO.findAll();
+            System.out.println(subscriptions);
+            return subscriptions;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
