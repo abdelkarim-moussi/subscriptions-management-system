@@ -49,8 +49,8 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
     }
 
     @Override
-    public void update(String id, Subscription subscription) throws SQLException {
-        System.out.println("access");
+    public int update(String id, Subscription subscription) throws SQLException {
+
                 String updateSQL = "UPDATE subscriptions SET monthlyamount = ?, startdate = ?, enddate = ?, monthsengagementperiod = ?,status = ? ,subscriptionType = ? WHERE id = ?";
                 PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
 
@@ -72,21 +72,37 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
                 }
 
                 int rowAffected = updateStatement.executeUpdate();
-
-                System.out.println(
-                        "row updated successfully : "+subscription + "-"+rowAffected);
-
                 updateStatement.close();
+
+                return rowAffected;
+
             }
 
         }catch (SQLException e){
             e.printStackTrace();
         }
 
+        return 0;
+
     }
 
     @Override
-    public void delete(String s) throws SQLException {
+    public int delete(String id) throws SQLException {
+
+        if(!id.trim().isEmpty()){
+            String deleteSql = "DELETE FROM subscriptions WHERE id = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+
+            try{
+                deleteStatement.setString(1,id);
+                int rowsAffected = deleteStatement.executeUpdate();
+                return rowsAffected;
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return 0;
 
     }
 

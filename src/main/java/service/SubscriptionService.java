@@ -82,5 +82,25 @@ public class SubscriptionService {
             e.getStackTrace();
         }
     }
+
+    public void deleteSubscription(String id){
+
+        try{
+
+            if(!id.trim().isEmpty()){
+
+                Subscription dataBaseSubscription = subscriptionDAO.findById(id);
+
+                if(dataBaseSubscription != null){
+                    subscriptionDAO.delete(id);
+                    System.out.println("deleted");
+                }
+                else System.err.println("Id is required and can not be null");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
 

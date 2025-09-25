@@ -50,5 +50,9 @@ public class Test {
                 );
     }
 
+    public static void deleteSub(){
+        subscriptionService.deleteSubscription("sub-35740342449062213816371332580601835317");
+    }
+
 
 }
