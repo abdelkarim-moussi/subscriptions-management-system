@@ -4,9 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface SubscriptionDAOInterface<T,S> {
-    void addSubscription(T t) throws SQLException;
-    void updateSubscription(S s ,List<T> data) throws SQLException;
-    void deleteSubscription(S s) throws SQLException;
-    void findSubscriptionById(S s) throws SQLException;
-    void findAllSubscription(S s) throws SQLException;
+    void add(T t) throws SQLException;
+    void update(S s ,T t) throws SQLException;
+    void delete(S s) throws SQLException;
+    T findById(S s) throws SQLException;
+    T findAll(S s) throws SQLException;
 }

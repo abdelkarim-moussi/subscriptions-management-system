@@ -17,12 +17,13 @@ public abstract class Subscription {
     public Subscription(){
         this.setId();
     }
-    Subscription(String serviceName,float monthlyAmount,LocalDateTime startDate,LocalDateTime endDate){
+    Subscription(String serviceName,float monthlyAmount,LocalDateTime startDate,LocalDateTime endDate, SubscriptionStatus status){
         this.setId();
         this.serviceName = serviceName;
         this.monthlyAmount = monthlyAmount;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = status;
     }
 
     public String getId(){
