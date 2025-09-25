@@ -22,6 +22,7 @@ public class SubscriptionWithoutEngagement extends Subscription{
     public String toString(){
         return "Subscription Without Engagement : \n" +
                 "Service Name : "+ this.getServiceName() +
+                "Status : "+ this.getStatus() +
                 "\nMonthly Amount : "+ this.getMonthlyAmount() +
                 "\nStart Date : "+ this.getStartDate() +
                 "\nEnd Date : "+ this.getEndDate();

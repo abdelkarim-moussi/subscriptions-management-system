@@ -50,26 +50,26 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
 
     @Override
     public void update(String id, Subscription subscription) throws SQLException {
+        System.out.println("access");
+                String updateSQL = "UPDATE subscriptions SET monthlyamount = ?, startdate = ?, enddate = ?, monthsengagementperiod = ?,status = ? ,subscriptionType = ? WHERE id = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
 
         try{
-            if(id != null && subscription != null){
+            if(!id.trim().isEmpty() && subscription != null){
 
-                String updateSQL = "UPDATE subscriptions SET monthlyamount = ?, startdate = ?, enddate = ?, monthsengagementperiod = ?,status = ? ,subscriptionType = ? WHERE id = ?";
-
-                PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
                 updateStatement.setFloat(1,subscription.getMonthlyAmount());
                 updateStatement.setTimestamp(2,Helper.dateFormaterToDate(subscription.getStartDate()));
                 updateStatement.setTimestamp(3,Helper.dateFormaterToDate(subscription.getEndDate()));
                 updateStatement.setInt(4,subscription.getMonthsEngagementPeriod());
                 updateStatement.setObject(5,subscription.getStatus(),Types.OTHER);
-                updateStatement.setString(6,id);
-
+                updateStatement.setString(7,id);
 
                 if(subscription instanceof SubscriptionWithEngagement){
-                    updateStatement.setObject(8, SubscriptionType.subscription_with_engagement,Types.OTHER);
+                    updateStatement.setObject(6, SubscriptionType.subscription_with_engagement,Types.OTHER);
                 }
-                else
-                    updateStatement.setObject(8, SubscriptionType.subscription_without_engagement,Types.OTHER);
+                else if(subscription instanceof SubscriptionWithoutEngagement){
+                    updateStatement.setObject(6, SubscriptionType.subscription_without_engagement,Types.OTHER);
+                }
 
                 int rowAffected = updateStatement.executeUpdate();
 
@@ -79,8 +79,8 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
                 updateStatement.close();
             }
 
-        }catch (Exception e){
-            e.getStackTrace();
+        }catch (SQLException e){
+            e.printStackTrace();
         }
 
     }
@@ -99,8 +99,6 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
 
             findOneStatement.setString(1, id);
             ResultSet storedSubscription = findOneStatement.executeQuery();
-
-            Subscription subscription;
 
             if (storedSubscription.next()) {
 

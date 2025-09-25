@@ -29,6 +29,7 @@ public class SubscriptionWithEngagement extends Subscription{
     public String toString(){
         return "Subscription With Engagement : \n" +
                 "Service Name : "+ this.getServiceName() +
+                "Status : "+ this.getStatus() +
                 "\nMonths Engagement Period "+ this.monthsEngagementPeriod +
                 "\nMonthly Amount : "+ this.getMonthlyAmount() +
                 "\nStart Date : "+ this.getStartDate() +

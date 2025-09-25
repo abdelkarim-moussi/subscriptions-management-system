@@ -54,22 +54,25 @@ public class SubscriptionService {
         try{
 
             Subscription storedSubscription = subscriptionDAO.findById(id);
-            System.out.println("storedSub : "+storedSubscription);
-            if(subscription != null){
 
+            if(storedSubscription != null){
+                    System.out.println("c1");
                 if(subscription.getServiceName().trim() != "" &&
-                        subscription.getMonthlyAmount() != 0 &&
-                        !subscription.getStartDate().isBefore(LocalDateTime.now())
-                        && subscription.getEndDate().isAfter(subscription.getStartDate().plusDays(30))
+                        subscription.getMonthlyAmount() > 0 &&
+                        subscription.getStartDate().isBefore(LocalDateTime.now())
+                        && subscription.getEndDate().isAfter(subscription.getStartDate())
                 ){
+                    System.out.println("c2");
                     if(subscription instanceof SubscriptionWithEngagement){
                         if (subscription.getMonthsEngagementPeriod() >= 1){
-                        subscriptionDAO.update(storedSubscription.getId(),subscription);
+                        subscriptionDAO.update(id,subscription);
+                            System.out.println(id+" "+subscription);
                         }
                         else System.err.println("subscription with engagement must have a months engagement period");
                     }
-                    else {
-                        subscriptionDAO.update(storedSubscription.getId(),subscription);
+                    else if(subscription instanceof SubscriptionWithoutEngagement) {
+                        subscriptionDAO.update(id,subscription);
+                            System.out.println(id+" "+subscription);
                     }
                 }
 
