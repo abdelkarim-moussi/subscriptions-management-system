@@ -17,7 +17,7 @@ public class Menu {
             System.out.println("1-créer abonnement");
             System.out.println("2-modifier abonnement");
             System.out.println("3-supprimer abonnement");
-            System.out.println("4-modifier abonnement");
+            System.out.println("4-éffectuer paiement");
             System.out.println("5-modifier paiement");
             System.out.println("6-supprimer payment");
 
@@ -28,10 +28,13 @@ public class Menu {
                     createSubscription();
                     break;
                 case 2 :
+                    updateSubscription();
                     break;
                 case 3 :
+                    deleteSubscription();
                     break;
                 case 4 :
+                    makePayment();
                     break;
                 case 5 :
                     break;
@@ -43,7 +46,7 @@ public class Menu {
     }
 
 
-    public static void createSubscription(){
+    private static void createSubscription(){
         System.out.println("choisir le type d'abonnement");
 
         do {
@@ -76,5 +79,37 @@ public class Menu {
                     break;
             }
         }while(true);
+    }
+
+    private static void updateSubscription(){
+
+        System.out.println("enter le code d'abonnement a modifier :");
+        String subCode = scanner.nextLine();
+        System.out.println("new service name :");
+        String serviceName = scanner.nextLine();
+        System.out.println("montant mensuel :");
+        float monthlyAmount = scanner.nextFloat();
+        System.out.println("periode d'engagement en mois :");
+        int period = scanner.nextInt();
+
+        subscriptionService.updateSubscription(subCode,serviceName,monthlyAmount,period);
+    }
+
+    private static void deleteSubscription(){
+        System.out.println("entrer le code d'abonnement a supprimer :");
+        String subCode = scanner.nextLine();
+
+        if(!subCode.trim().isEmpty()){
+        subscriptionService.deleteSubscription(subCode);
+        }
+        else System.out.println("code ne peut pas être vide!");
+    }
+
+    private static void makePayment(){
+        System.out.println("entrer le code d'abonnement :");
+        String subCode = scanner.nextLine();
+        if(!subCode.trim().isEmpty()){
+
+        }
     }
 }

@@ -17,6 +17,7 @@ public class SubscriptionService {
     public SubscriptionService(){
         this.subscriptionDAO = new SubscriptionDAO();
     }
+
     public void createSubscription(
             String serviceName, float monthlyAmount,
             Integer monthsEngagementPeriod){
@@ -50,31 +51,32 @@ public class SubscriptionService {
         }
     }
 
-    public void updateSubscription(String id ,Subscription subscription){
+    public void updateSubscription(String id ,String serviceName, float monthlyAmount,
+                                   Integer monthsEngagementPeriod){
 
         try{
 
             Subscription storedSubscription = subscriptionDAO.findById(id);
-
+            Subscription subscription = null;
             if(storedSubscription != null){
-                    System.out.println("c1");
-                if(subscription.getServiceName().trim() != "" &&
-                        subscription.getMonthlyAmount() > 0 &&
-                        subscription.getStartDate().isBefore(LocalDateTime.now())
-                        && subscription.getEndDate().isAfter(subscription.getStartDate())
+                if(serviceName.trim() != "" &&
+                        monthlyAmount > 0
                 ){
-                    System.out.println("c2");
-                    if(subscription instanceof SubscriptionWithEngagement){
-                        if (subscription.getMonthsEngagementPeriod() >= 1){
+                        if (monthsEngagementPeriod >= 1){
+                           subscription = new SubscriptionWithEngagement(serviceName,
+                                    monthlyAmount,LocalDateTime.now(),
+                                    LocalDateTime.now().plusDays(30),
+                                    storedSubscription.getStatus(),monthsEngagementPeriod);
                         subscriptionDAO.update(id,subscription);
+                            System.out.println(id+" "+subscription);
+                        } else {
+                            subscription = new SubscriptionWithoutEngagement(serviceName,
+                                    monthlyAmount, LocalDateTime.now(),
+                                    LocalDateTime.now().plusDays(30),
+                                    storedSubscription.getStatus());
+                            subscriptionDAO.update(id, subscription);
                             System.out.println(id+" "+subscription);
                         }
-                        else System.err.println("subscription with engagement must have a months engagement period");
-                    }
-                    else if(subscription instanceof SubscriptionWithoutEngagement) {
-                        subscriptionDAO.update(id,subscription);
-                            System.out.println(id+" "+subscription);
-                    }
                 }
 
             }

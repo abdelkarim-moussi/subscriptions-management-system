@@ -48,10 +48,10 @@ public class Test {
         Subscription subscription = new SubscriptionWithEngagement("jaaza",300,LocalDateTime.now(),
                 LocalDateTime.now().plusDays(30),SubscriptionStatus.terminated,30);
 
-        subscriptionService.updateSubscription(
-                "sub-193883259479442979307280185077140071773",
-                subscription
-                );
+//        subscriptionService.updateSubscription(
+//                "sub-193883259479442979307280185077140071773",
+//                subscription
+//                );
     }
 
     public static void deleteSub(){
