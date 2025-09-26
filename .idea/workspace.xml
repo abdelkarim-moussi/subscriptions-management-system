@@ -5,19 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28a5b487-a7f9-4426-8780-aeea316a5e99" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/DAOInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/DAOInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/PaymentDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/PaymentDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/SubscriptionDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/SubscriptionDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Payment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/SubscriptionWithEngagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/SubscriptionWithEngagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/SubscriptionWithoutEngagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/SubscriptionWithoutEngagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/enums/PaymentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/enums/PaymentStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/enums/PaymentType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/enums/PaymentType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/PaymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,16 +78,5 @@
       <updated>1758548352915</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/service/PaymentService.java</url>
-          <line>61</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

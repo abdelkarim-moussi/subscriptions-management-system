@@ -43,22 +43,23 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
     }
 
     @Override
-    public int update(String s, Payment payment) throws SQLException {
+    public int update(String id, Payment payment) throws SQLException {
 
         String updateSql = "UPDATE payments SET duedate = ? , paymentdate = ?, type = ?, status = ? WHERE id = ?";
         PreparedStatement updateStatement = connection.prepareStatement(updateSql);
 
         try{
-
             updateStatement.setTimestamp(1,Helper.dateFormaterToDate(payment.getDueDate()));
             updateStatement.setTimestamp(2,Helper.dateFormaterToDate(payment.getPaymentDate()));
             updateStatement.setObject(3,payment.getPaymentType(),Types.OTHER);
             updateStatement.setObject(4,payment.getPaymentStatus(),Types.OTHER);
-            updateStatement.setString(5,payment.getId());
+            updateStatement.setString(5,id);
 
-            int resultSet = updateStatement.executeUpdate();
+            int rowAffected = updateStatement.executeUpdate();
 
-            return resultSet;
+            updateStatement.close();
+            System.out.println("rs : "+rowAffected);
+            return rowAffected;
 
         }catch (SQLException e){
             e.printStackTrace();

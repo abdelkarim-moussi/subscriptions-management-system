@@ -56,13 +56,12 @@ public class PaymentService {
         Payment payment;
         try{
             if(!idPayment.trim().isEmpty()){
-                System.out.println("c1");
+
                 Payment dbPayment = (Payment)payDAOInterface.findById(idPayment);
-                System.out.println(dbPayment);
                 if(dbPayment != null){
                     if(!subscriptionId.trim().isEmpty() && paymentType != null && paymentStatus != null){
                         if(subscriptionId.equals(dbPayment.getSubscriptionId())){
-                            payment = new Payment(subscriptionId,dueDate,paymentDate, paymentType,paymentStatus);
+                            payment = new Payment(subscriptionId,dueDate,paymentDate,paymentType,paymentStatus);
                             int res = payDAOInterface.update(idPayment,payment);
                             System.out.println(res);
                             return res;
