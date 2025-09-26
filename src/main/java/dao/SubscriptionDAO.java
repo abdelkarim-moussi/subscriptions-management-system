@@ -1,6 +1,5 @@
 package main.java.dao;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import main.java.entity.Subscription;
 import main.java.entity.SubscriptionWithEngagement;
 import main.java.entity.SubscriptionWithoutEngagement;
@@ -13,17 +12,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,String>{
+public class SubscriptionDAO implements DAOInterface<Subscription,String> {
 
     static Connection connection = DataBaseConnection.getConnection();
 
+
     @Override
     public void add(Subscription subscription) throws SQLException{
+        String insertSQL = "INSERT INTO subscriptions (id, servicename, monthlyamount, startdate, enddate, monthsengagementperiod,status,subscriptionType) VALUES (? , ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
+
         try{
 
-        String insertSQL = "INSERT INTO subscriptions (id, servicename, monthlyamount, startdate, enddate, monthsengagementperiod,status,subscriptionType) VALUES (? , ?, ?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
         insertStatement.setString(1,subscription.getId());
         insertStatement.setString(2,subscription.getServiceName());
         insertStatement.setFloat(3,subscription.getMonthlyAmount());
@@ -45,7 +45,7 @@ public class SubscriptionDAO implements SubscriptionDAOInterface<Subscription,St
                     "Inserted data into 'subscriptions' table! row : "+rowAffected);
 
         }catch(SQLException e){
-            e.getStackTrace();
+            e.printStackTrace();
         }
     }
 

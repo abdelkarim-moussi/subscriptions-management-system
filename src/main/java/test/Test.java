@@ -3,7 +3,10 @@ package main.java.test;
 import main.java.entity.Subscription;
 import main.java.entity.SubscriptionWithEngagement;
 import main.java.entity.SubscriptionWithoutEngagement;
+import main.java.enums.PaymentStatus;
+import main.java.enums.PaymentType;
 import main.java.enums.SubscriptionStatus;
+import main.java.service.PaymentService;
 import main.java.service.SubscriptionService;
 
 import java.time.LocalDateTime;
@@ -28,6 +31,9 @@ public class Test {
     }
 
     static SubscriptionService subscriptionService = new SubscriptionService();
+
+    static PaymentService paymentService = new PaymentService();
+
 
     public static void createSub(){
         subscriptionService.createSubscription(
@@ -58,5 +64,13 @@ public class Test {
         subscriptionService.getAllSubscriptions();
     }
 
+    //Payment Test
 
+    public static void createPay(){
+        paymentService.createPayment("sub-227588569865594870118431465200625915628", PaymentType.pay_with_card, PaymentStatus.payed);
+    }
+
+    public static void updatePay(){
+        paymentService.updatePayment("pay-334008900380443311103481528111145124772","sub-227588569865594870118431465200625915628",LocalDateTime.now(),LocalDateTime.now().plusDays(30),PaymentType.paypal, PaymentStatus.late);
+    }
 }

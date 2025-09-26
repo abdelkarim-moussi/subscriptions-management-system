@@ -7,6 +7,9 @@ import java.sql.Connection;
 public class Main {
 
     public static void main(String[] args) {
-        Test.allSubs();
+//        Test.allSubs();
+//        Test.createPay();
+
+        Test.updatePay();
     }
 }
