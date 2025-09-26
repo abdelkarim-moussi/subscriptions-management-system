@@ -39,9 +39,7 @@ public class Test {
         subscriptionService.createSubscription(
                 "Orange",
                 40,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(30),
-                0, SubscriptionStatus.terminated);
+                0);
     }
 
     public static void updateSub(){

@@ -1,3 +1,4 @@
+import main.java.presentation.Menu;
 import main.java.test.Test;
 import main.java.util.DataBaseConnection;
 
@@ -7,10 +8,8 @@ import java.sql.Connection;
 public class Main {
 
     public static void main(String[] args) {
-//        Test.allSubs();
-//        Test.createPay();
-//        Test.updatePay();
-        Test.deletePay();
+
+        Menu.menu();
 
     }
 }

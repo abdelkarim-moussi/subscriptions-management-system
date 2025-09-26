@@ -19,8 +19,7 @@ public class SubscriptionService {
     }
     public void createSubscription(
             String serviceName, float monthlyAmount,
-            LocalDateTime startDate, LocalDateTime endDate,
-            Integer monthsEngagementPeriod, SubscriptionStatus status){
+            Integer monthsEngagementPeriod){
 
         try{
             if(monthsEngagementPeriod > 1){
@@ -28,9 +27,9 @@ public class SubscriptionService {
                 subscription.setServiceName(serviceName);
                 subscription.setMonthlyAmount(monthlyAmount);
                 subscription.setMonthsEngagementPeriod(monthsEngagementPeriod);
-                subscription.setStartDate(startDate);
-                subscription.setEndDate(endDate);
-                subscription.setStatus(status);
+                subscription.setStartDate(LocalDateTime.now());
+                subscription.setEndDate(LocalDateTime.now().plusDays(30));
+                subscription.setStatus(SubscriptionStatus.active);
 
                 subscriptionDAO.add(subscription);
 
@@ -39,9 +38,9 @@ public class SubscriptionService {
                 SubscriptionWithoutEngagement subscription = new SubscriptionWithoutEngagement();
                 subscription.setServiceName(serviceName);
                 subscription.setMonthlyAmount(monthlyAmount);
-                subscription.setStartDate(startDate);
-                subscription.setEndDate(endDate);
-                subscription.setStatus(status);
+                subscription.setStartDate(LocalDateTime.now());
+                subscription.setEndDate(LocalDateTime.now().plusDays(30));
+                subscription.setStatus(SubscriptionStatus.active);
 
                 subscriptionDAO.add(subscription);
             }
