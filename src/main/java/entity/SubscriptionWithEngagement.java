@@ -27,14 +27,14 @@ public class SubscriptionWithEngagement extends Subscription{
     }
 
     public String toString(){
+
         return "Subscription With Engagement : \n" +
                 "Service Name : "+ this.getServiceName() +
                 "\nStatus : "+ this.getStatus() +
                 "\nMonths Engagement Period "+ this.monthsEngagementPeriod +
                 "\nMonthly Amount : "+ this.getMonthlyAmount() +
                 "\nStart Date : "+ this.getStartDate() +
-                "\nEnd Date : "+ this.getEndDate();
+                "\nEnd Date : "+ this.getEndDate()+"\n";
     }
-
 
 }

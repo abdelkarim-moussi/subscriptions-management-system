@@ -8,6 +8,7 @@ import main.java.util.Helper;
 import org.postgresql.jdbc.PgConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,12 +17,10 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
     static Connection connection = DataBaseConnection.getConnection();
 
     @Override
-    public void add(Payment payment) throws SQLException {
+    public int add(Payment payment) throws SQLException {
 
             String insertSql = "INSERT INTO payments (id, subscriptionid, duedate, paymentdate, type, status) VALUES(? ,? ,?, ?, ?, ?)";
             PreparedStatement insertStatement = connection.prepareStatement(insertSql);
-
-        try{
 
             if(payment != null){
                 insertStatement.setString(1,payment.getId());
@@ -33,13 +32,11 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
 
                 int rowSet = insertStatement.executeUpdate();
 
-                System.out.println("row inserted succefully - "+rowSet);
+                return rowSet;
             }
             insertStatement.close();
+            return 0;
 
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -48,7 +45,6 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
         String updateSql = "UPDATE payments SET duedate = ? , paymentdate = ?, type = ?, status = ? WHERE id = ?";
         PreparedStatement updateStatement = connection.prepareStatement(updateSql);
 
-        try{
             updateStatement.setTimestamp(1,Helper.dateFormaterToDate(payment.getDueDate()));
             updateStatement.setTimestamp(2,Helper.dateFormaterToDate(payment.getPaymentDate()));
             updateStatement.setObject(3,payment.getPaymentType(),Types.OTHER);
@@ -61,11 +57,6 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
             System.out.println("rs : "+rowAffected);
             return rowAffected;
 
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        return 0;
     }
 
     @Override
@@ -75,16 +66,11 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
             String deleteSql = "DELETE FROM payments WHERE id = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
 
-            try{
-                deleteStatement.setString(1,id);
-                int rowsAffected = deleteStatement.executeUpdate();
-                return rowsAffected;
-
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
+            deleteStatement.setString(1,id);
+            int rowsAffected = deleteStatement.executeUpdate();
+            return rowsAffected;
         }
-        return 0;
+        else return 0;
     }
 
     @Override
@@ -94,7 +80,6 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
         PreparedStatement findOneStatement = connection.prepareStatement(findOneSql);
         Payment payment = null;
 
-        try{
             if(!id.trim().isEmpty()){
             findOneStatement.setString(1,id);
             ResultSet resultSet = findOneStatement.executeQuery();
@@ -110,10 +95,34 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
 
             }
 
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
         return payment;
+    }
+
+    public List<Payment> findBySubscription(String subId) throws SQLException{
+
+        List<Payment> subPayments = new ArrayList<>();
+        String findBySubSql = "SELECT * FROM payments WHERE subscriptionid = ?";
+        PreparedStatement findBySubStatement = connection.prepareStatement(findBySubSql);
+
+        if(!subId.trim().isEmpty()){
+        findBySubStatement.setString(1,subId);
+
+        ResultSet resultSet = findBySubStatement.executeQuery();
+
+        while (resultSet.next()){
+            Payment payment = new Payment(resultSet.getString("subscriptionid"),
+                    resultSet.getTimestamp("duedate").toLocalDateTime(),
+                    resultSet.getTimestamp("paymentdate").toLocalDateTime(),
+                    PaymentType.unknown,
+                    PaymentStatus.valueOf(resultSet.getObject("status").toString()));
+
+            subPayments.add(payment);
+        }
+
+        }
+
+        return subPayments;
+
     }
 
     @Override
