@@ -76,4 +76,24 @@ public class PaymentService {
 
         return 0;
     }
+
+    public void deletePayment(String id){
+
+        try{
+
+            if(!id.trim().isEmpty()){
+
+                Payment dbPayment = (Payment) payDAOInterface.findById(id);
+
+                if(dbPayment != null){
+                    payDAOInterface.delete(id);
+                    System.out.println("deleted");
+                }
+                else System.err.println("Id is required and can not be null");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

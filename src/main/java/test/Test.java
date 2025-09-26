@@ -73,4 +73,8 @@ public class Test {
     public static void updatePay(){
         paymentService.updatePayment("pay-153908655531777072495171733021793930435","sub-227588569865594870118431465200625915628",LocalDateTime.now(),LocalDateTime.now().plusDays(30),PaymentType.paypal, PaymentStatus.late);
     }
+
+    public static void deletePay(){
+        paymentService.deletePayment("pay-153908655531777072495171733021793930435");
+    }
 }

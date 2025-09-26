@@ -9,7 +9,8 @@ public class Main {
     public static void main(String[] args) {
 //        Test.allSubs();
 //        Test.createPay();
+//        Test.updatePay();
+        Test.deletePay();
 
-        Test.updatePay();
     }
 }

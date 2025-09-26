@@ -69,7 +69,21 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
     }
 
     @Override
-    public int delete(String s) throws SQLException {
+    public int delete(String id) throws SQLException {
+
+        if(!id.trim().isEmpty()){
+            String deleteSql = "DELETE FROM payments WHERE id = ?";
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+
+            try{
+                deleteStatement.setString(1,id);
+                int rowsAffected = deleteStatement.executeUpdate();
+                return rowsAffected;
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
         return 0;
     }
 
