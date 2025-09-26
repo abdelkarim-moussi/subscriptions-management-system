@@ -8,50 +8,57 @@ import main.java.entity.Subscription;
 import main.java.enums.PaymentStatus;
 import main.java.enums.PaymentType;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PaymentService {
 
     private DAOInterface subDAOInterface;
-
     private DAOInterface payDAOInterface;
+    private PaymentDAO paymentDao;
 
     public PaymentService(){
         subDAOInterface = new SubscriptionDAO();
         payDAOInterface = new PaymentDAO();
+        paymentDao = new PaymentDAO();
     }
 
     public Payment createPayment(String subscriptionId,
                                  PaymentType paymentType,
-                                 PaymentStatus paymentStatus){
+                                 LocalDateTime dueDate,
+                                 PaymentStatus paymentStatus) {
         Payment payment = null;
 
         try{
             if(!subscriptionId.trim().isEmpty()){
-                if(paymentType != null && paymentStatus != null){
+//                Subscription subscription = (Subscription) subDAOInterface.findById(subscriptionId);
 
-                    Subscription subscription = (Subscription) subDAOInterface.findById(subscriptionId);
-                    System.out.println(subscription);
+                if(paymentType != null && paymentStatus != null && dueDate != null){
+
                     payment = new Payment(subscriptionId,
-                            LocalDateTime.now().plusDays(30),
+                            dueDate,
                             LocalDateTime.now(),
-                            paymentType,paymentStatus);
+                            paymentType,
+                            paymentStatus);
 
                     payDAOInterface.add(payment);
                 }
             }
 
-        }catch (Exception e){
+        }catch (SQLException e){
             e.printStackTrace();
         }
         return payment;
 
     }
 
-    public int updatePayment(String idPayment, String subscriptionId,
-                             LocalDateTime dueDate, LocalDateTime paymentDate,
-                             PaymentType paymentType, PaymentStatus paymentStatus){
+    public int updatePayment(String idPayment,
+                             LocalDateTime paymentDate,
+                             PaymentType paymentType,
+                             PaymentStatus paymentStatus){
 
         Payment payment;
         try{
@@ -59,13 +66,14 @@ public class PaymentService {
 
                 Payment dbPayment = (Payment)payDAOInterface.findById(idPayment);
                 if(dbPayment != null){
-                    if(!subscriptionId.trim().isEmpty() && paymentType != null && paymentStatus != null){
-                        if(subscriptionId.equals(dbPayment.getSubscriptionId())){
-                            payment = new Payment(subscriptionId,dueDate,paymentDate,paymentType,paymentStatus);
-                            int res = payDAOInterface.update(idPayment,payment);
-                            System.out.println(res);
-                            return res;
-                        }
+                    if(paymentType != null && paymentDate != null){
+                            payment = new Payment();
+                            payment.setPaymentDate(paymentDate);
+                            payment.setPaymentType(paymentType);
+                            payment.setPaymentStatus(paymentStatus);
+                            int rowResult = payDAOInterface.update(idPayment,payment);
+
+                            return rowResult;
                     }
                 }
             }
@@ -95,5 +103,21 @@ public class PaymentService {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public List<Payment> getSubscriptionPayments(String subId) throws SQLException{
+
+        List<Payment> subPayments = null;
+
+        if(!subId.trim().isEmpty()){
+            Subscription subscription = (Subscription) subDAOInterface.findById(subId);
+            System.out.println(subscription);
+            if(subscription != null){
+                  subPayments = paymentDao.findBySubscription(subId);
+
+            }
+        }
+
+        return subPayments;
     }
 }

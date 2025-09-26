@@ -25,7 +25,7 @@ public class SubscriptionWithoutEngagement extends Subscription{
                 "\nStatus : "+ this.getStatus() +
                 "\nMonthly Amount : "+ this.getMonthlyAmount() +
                 "\nStart Date : "+ this.getStartDate() +
-                "\nEnd Date : "+ this.getEndDate();
+                "\nEnd Date : "+ this.getEndDate() +"\n";
     }
 
 }

@@ -1,12 +1,17 @@
 package main.java.service;
 
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+import main.java.dao.PaymentDAO;
 import main.java.dao.SubscriptionDAO;
+import main.java.entity.Payment;
 import main.java.entity.Subscription;
 import main.java.entity.SubscriptionWithEngagement;
 import main.java.entity.SubscriptionWithoutEngagement;
+import main.java.enums.PaymentStatus;
 import main.java.enums.SubscriptionStatus;
+import main.java.enums.SubscriptionType;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +19,10 @@ import java.util.List;
 public class SubscriptionService {
 
     SubscriptionDAO subscriptionDAO;
+    PaymentDAO paymentDAO;
     public SubscriptionService(){
         this.subscriptionDAO = new SubscriptionDAO();
+        this.paymentDAO = new PaymentDAO();
     }
 
     public void createSubscription(
@@ -29,21 +36,32 @@ public class SubscriptionService {
                 subscription.setMonthlyAmount(monthlyAmount);
                 subscription.setMonthsEngagementPeriod(monthsEngagementPeriod);
                 subscription.setStartDate(LocalDateTime.now());
-                subscription.setEndDate(LocalDateTime.now().plusDays(30));
+                subscription.setEndDate(subscription.getStartDate().plusMonths(monthsEngagementPeriod));
                 subscription.setStatus(SubscriptionStatus.active);
+                subscription.setSubscriptionType(SubscriptionType.subscription_with_engagement);
 
-                subscriptionDAO.add(subscription);
+                int dbResult = subscriptionDAO.add(subscription);
+
+                if(dbResult == 1){
+                    this.generateDueDates(subscription);
+                }
 
             }
+
             else {
                 SubscriptionWithoutEngagement subscription = new SubscriptionWithoutEngagement();
                 subscription.setServiceName(serviceName);
                 subscription.setMonthlyAmount(monthlyAmount);
                 subscription.setStartDate(LocalDateTime.now());
-                subscription.setEndDate(LocalDateTime.now().plusDays(30));
+                subscription.setEndDate(subscription.getStartDate().plusMonths(1));
                 subscription.setStatus(SubscriptionStatus.active);
+                subscription.setSubscriptionType(SubscriptionType.subscription_without_engagement);
 
-                subscriptionDAO.add(subscription);
+                int dbResult = subscriptionDAO.add(subscription);
+                if(dbResult == 1){
+                    this.generateDueDates(subscription);
+                }
+
             }
 
         }catch(Exception e){
@@ -51,9 +69,38 @@ public class SubscriptionService {
         }
     }
 
+    private void generateDueDates(Subscription subscription) throws SQLException {
+
+        if(subscription.getSubscriptionType().equals(SubscriptionType.subscription_with_engagement)){
+
+            for (int i = 1; i <= subscription.getMonthsEngagementPeriod(); i++){
+                LocalDateTime dueDate = subscription.getStartDate().plusMonths(i);
+
+                Payment payment = new Payment();
+                payment.setPaymentDate(LocalDateTime.now());
+                payment.setDueDate(dueDate);
+                payment.setSubscriptionId(subscription.getId());
+                payment.setPaymentStatus(PaymentStatus.not_payed);
+
+                paymentDAO.add(payment);
+            }
+        }
+        else {
+            LocalDateTime dueDate = subscription.getStartDate().plusMonths(1);
+
+            Payment payment = new Payment();
+            payment.setPaymentDate(LocalDateTime.now());
+            payment.setDueDate(dueDate);
+            payment.setSubscriptionId(subscription.getId());
+            payment.setPaymentStatus(PaymentStatus.not_payed);
+
+            paymentDAO.add(payment);
+
+        }
+    }
+
     public void updateSubscription(String id ,String serviceName, float monthlyAmount,
                                    Integer monthsEngagementPeriod){
-
         try{
 
             Subscription storedSubscription = subscriptionDAO.findById(id);
@@ -110,7 +157,6 @@ public class SubscriptionService {
 
         try{
             List <Subscription> subscriptions = subscriptionDAO.findAll();
-            System.out.println(subscriptions);
             return subscriptions;
 
         }catch (Exception e){

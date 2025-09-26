@@ -83,12 +83,11 @@ public class Payment {
 
     @Override
     public String toString() {
-        return "Payment{" +
-                "\nid-Subscription='" + subscriptionId + '\'' +
+        return "Payment :\n" +
+                "id-Subscription=" + subscriptionId +
                 "\ndueDate=" + dueDate +
                 "\npaymentDate=" + paymentDate +
                 "\npaymentType=" + paymentType +
-                "\npaymentStatus=" + paymentStatus +
-                '}';
+                "\npaymentStatus=" + paymentStatus +"\n";
     }
 }
