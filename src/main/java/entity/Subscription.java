@@ -18,6 +18,7 @@ public abstract class Subscription {
 
     public Subscription(){
         this.setId();
+        this.setSubscriptionType();
     }
     Subscription(String serviceName,float monthlyAmount,LocalDateTime startDate,LocalDateTime endDate, SubscriptionStatus status){
         this.setId();
@@ -26,6 +27,7 @@ public abstract class Subscription {
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.setSubscriptionType();
     }
 
     public String getId(){
@@ -79,9 +81,7 @@ public abstract class Subscription {
         return subscriptionType;
     }
 
-    public void setSubscriptionType(SubscriptionType subscriptionType) {
-        this.subscriptionType = subscriptionType;
-    }
+    public abstract void setSubscriptionType();
 
     public abstract Integer getMonthsEngagementPeriod();
 }

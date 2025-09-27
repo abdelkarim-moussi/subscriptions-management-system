@@ -1,13 +1,14 @@
 package main.java.entity;
 
 import main.java.enums.SubscriptionStatus;
+import main.java.enums.SubscriptionType;
 
 import java.time.LocalDateTime;
 
 public class SubscriptionWithEngagement extends Subscription{
     private Integer monthsEngagementPeriod;
 
-    public SubscriptionWithEngagement() {}
+    public SubscriptionWithEngagement() {this.setSubscriptionType();}
 
     public SubscriptionWithEngagement(String serviceName, float monthlyAmount,
                                       LocalDateTime startDate, LocalDateTime endDate,
@@ -15,6 +16,7 @@ public class SubscriptionWithEngagement extends Subscription{
                                       int monthsEngagementPeriod) {
         super(serviceName, monthlyAmount, startDate, endDate,status);
         this.monthsEngagementPeriod = monthsEngagementPeriod;
+        this.setSubscriptionType();
     }
 
     @Override
@@ -24,6 +26,10 @@ public class SubscriptionWithEngagement extends Subscription{
 
     public void setMonthsEngagementPeriod(Integer monthsEngagementPeriod) {
         this.monthsEngagementPeriod = monthsEngagementPeriod;
+    }
+
+    public void setSubscriptionType(){
+        this.subscriptionType = SubscriptionType.subscription_with_engagement;
     }
 
     public String toString(){

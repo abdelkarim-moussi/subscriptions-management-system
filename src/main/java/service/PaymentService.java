@@ -7,11 +7,15 @@ import main.java.entity.Payment;
 import main.java.entity.Subscription;
 import main.java.enums.PaymentStatus;
 import main.java.enums.PaymentType;
+import main.java.enums.SubscriptionType;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class PaymentService {
@@ -64,7 +68,7 @@ public class PaymentService {
         try{
             if(!idPayment.trim().isEmpty()){
 
-                Payment dbPayment = (Payment)payDAOInterface.findById(idPayment);
+                Payment dbPayment = (Payment) payDAOInterface.findById(idPayment);
                 if(dbPayment != null){
                     if(paymentType != null && paymentDate != null){
                             payment = new Payment();
@@ -85,7 +89,7 @@ public class PaymentService {
         return 0;
     }
 
-    public void deletePayment(String id){
+    public int deletePayment(String id){
 
         try{
 
@@ -94,8 +98,7 @@ public class PaymentService {
                 Payment dbPayment = (Payment) payDAOInterface.findById(id);
 
                 if(dbPayment != null){
-                    payDAOInterface.delete(id);
-                    System.out.println("deleted");
+                    return payDAOInterface.delete(id);
                 }
                 else System.err.println("Id is required and can not be null");
             }
@@ -103,6 +106,7 @@ public class PaymentService {
         }catch (Exception e){
             e.printStackTrace();
         }
+        return 0;
     }
 
     public List<Payment> getSubscriptionPayments(String subId) throws SQLException{
@@ -111,7 +115,6 @@ public class PaymentService {
 
         if(!subId.trim().isEmpty()){
             Subscription subscription = (Subscription) subDAOInterface.findById(subId);
-            System.out.println(subscription);
             if(subscription != null){
                   subPayments = paymentDao.findBySubscription(subId);
 
@@ -119,5 +122,47 @@ public class PaymentService {
         }
 
         return subPayments;
+    }
+
+    public List<Payment> getMissedPayments(String Id){
+
+        List<Payment> missedPayments = null;
+
+        try {
+            Subscription subscription = (Subscription)subDAOInterface.findById(Id);
+            System.out.println(subscription);
+            if(subscription != null){
+                if(subscription.getSubscriptionType() == SubscriptionType.subscription_with_engagement){
+                    List<Payment> payments = paymentDao.findBySubscription(Id);
+
+                    if(payments != null){
+                        missedPayments =  payments.stream().filter(payment -> payment.getDueDate().isBefore(LocalDateTime.now()))
+                                .collect(Collectors.toList());
+
+                    }
+                }
+            }
+
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return missedPayments;
+    }
+
+    public List<Payment> lastPayments(){
+        List<Payment> lastPayments = null;
+        try{
+            List<Payment> payments = payDAOInterface.findAll();
+            payments.sort(Comparator.comparing(Payment::getDueDate).reversed());
+            lastPayments = payments.stream().limit(5).collect(Collectors.toList());
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return lastPayments;
+
     }
 }

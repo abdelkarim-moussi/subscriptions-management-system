@@ -42,14 +42,13 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
     @Override
     public int update(String id, Payment payment) throws SQLException {
 
-        String updateSql = "UPDATE payments SET duedate = ? , paymentdate = ?, type = ?, status = ? WHERE id = ?";
+        String updateSql = "UPDATE payments SET paymentdate = ?, type = ?, status = ? WHERE id = ?";
         PreparedStatement updateStatement = connection.prepareStatement(updateSql);
 
-            updateStatement.setTimestamp(1,Helper.dateFormaterToDate(payment.getDueDate()));
-            updateStatement.setTimestamp(2,Helper.dateFormaterToDate(payment.getPaymentDate()));
-            updateStatement.setObject(3,payment.getPaymentType(),Types.OTHER);
-            updateStatement.setObject(4,payment.getPaymentStatus(),Types.OTHER);
-            updateStatement.setString(5,id);
+            updateStatement.setTimestamp(1,Helper.dateFormaterToDate(payment.getPaymentDate()));
+            updateStatement.setObject(2,payment.getPaymentType(),Types.OTHER);
+            updateStatement.setObject(3,payment.getPaymentStatus(),Types.OTHER);
+            updateStatement.setString(4,id);
 
             int rowAffected = updateStatement.executeUpdate();
 
@@ -89,7 +88,7 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
                         resultSet.getString("subscriptionid"),
                         resultSet.getTimestamp("duedate").toLocalDateTime(),
                         resultSet.getTimestamp("paymentdate").toLocalDateTime(),
-                        PaymentType.valueOf(resultSet.getObject("type").toString()),
+                        PaymentType.valueOf(resultSet.getObject("type").toString()) ,
                         PaymentStatus.valueOf(resultSet.getObject("status").toString()));
             }
 
@@ -113,7 +112,7 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
             Payment payment = new Payment(resultSet.getString("subscriptionid"),
                     resultSet.getTimestamp("duedate").toLocalDateTime(),
                     resultSet.getTimestamp("paymentdate").toLocalDateTime(),
-                    PaymentType.unknown,
+                    PaymentType.valueOf(resultSet.getObject("type").toString()),
                     PaymentStatus.valueOf(resultSet.getObject("status").toString()));
 
             subPayments.add(payment);
@@ -127,6 +126,25 @@ public class PaymentDAO implements DAOInterface <Payment,String> {
 
     @Override
     public List<Payment> findAll() throws SQLException {
-        return Collections.emptyList();
+
+        List<Payment> payments = new ArrayList<>();
+        String findAllSql = "SELECT * FROM payments";
+
+        Statement findAllStatemnts = connection.createStatement();
+        ResultSet resultSet = findAllStatemnts.executeQuery(findAllSql);
+
+        while(resultSet.next()){
+            Payment payment = new Payment(
+                    resultSet.getString("subscriptionid"),
+                    resultSet.getTimestamp("duedate").toLocalDateTime(),
+                    resultSet.getTimestamp("paymentdate").toLocalDateTime(),
+                    PaymentType.valueOf(resultSet.getObject("type").toString()),
+                    PaymentStatus.valueOf(resultSet.getObject("status").toString())
+            );
+                    payments.add(payment);
+        }
+
+        return payments;
+
     }
 }

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SubscriptionService {
 
@@ -38,7 +39,6 @@ public class SubscriptionService {
                 subscription.setStartDate(LocalDateTime.now());
                 subscription.setEndDate(subscription.getStartDate().plusMonths(monthsEngagementPeriod));
                 subscription.setStatus(SubscriptionStatus.active);
-                subscription.setSubscriptionType(SubscriptionType.subscription_with_engagement);
 
                 int dbResult = subscriptionDAO.add(subscription);
 
@@ -55,7 +55,6 @@ public class SubscriptionService {
                 subscription.setStartDate(LocalDateTime.now());
                 subscription.setEndDate(subscription.getStartDate().plusMonths(1));
                 subscription.setStatus(SubscriptionStatus.active);
-                subscription.setSubscriptionType(SubscriptionType.subscription_without_engagement);
 
                 int dbResult = subscriptionDAO.add(subscription);
                 if(dbResult == 1){
@@ -163,6 +162,28 @@ public class SubscriptionService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public float getTotalPayed(String id){
+        float totalPayed = 0;
+        if(!id.trim().isEmpty()){
+            try {
+                 Subscription subscription = (Subscription) subscriptionDAO.findById(id);
+                 List<Payment> payments = paymentDAO.findBySubscription(id);
+
+                 List<Payment> payed = payments.stream().filter(payment ->
+                         payment.getPaymentStatus() == PaymentStatus.payed)
+                         .collect(Collectors.toList());
+
+                 totalPayed = subscription.getMonthlyAmount() * payed.size();
+
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+        }
+            return totalPayed;
+
     }
 }
 
