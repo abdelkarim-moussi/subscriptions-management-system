@@ -18,44 +18,33 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
 
 
     @Override
-    public void add(Subscription subscription) throws SQLException{
+    public int add(Subscription subscription) throws SQLException{
         String insertSQL = "INSERT INTO subscriptions (id, servicename, monthlyamount, startdate, enddate, monthsengagementperiod,status,subscriptionType) VALUES (? , ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement insertStatement = connection.prepareStatement(insertSQL);
 
-        try{
+        if(subscription != null){
+            insertStatement.setString(1,subscription.getId());
+            insertStatement.setString(2,subscription.getServiceName());
+            insertStatement.setFloat(3,subscription.getMonthlyAmount());
+            insertStatement.setTimestamp(4,Helper.dateFormaterToDate(subscription.getStartDate()));
+            insertStatement.setTimestamp(5,Helper.dateFormaterToDate(subscription.getEndDate()));
+            insertStatement.setInt(6,subscription.getMonthsEngagementPeriod());
+            insertStatement.setObject(7,subscription.getStatus(),Types.OTHER);
+            insertStatement.setObject(8, subscription.getSubscriptionType(),Types.OTHER);
 
-        insertStatement.setString(1,subscription.getId());
-        insertStatement.setString(2,subscription.getServiceName());
-        insertStatement.setFloat(3,subscription.getMonthlyAmount());
-        insertStatement.setTimestamp(4,Helper.dateFormaterToDate(subscription.getStartDate()));
-        insertStatement.setTimestamp(5,Helper.dateFormaterToDate(subscription.getEndDate()));
-        insertStatement.setInt(6,subscription.getMonthsEngagementPeriod());
-        insertStatement.setObject(7,subscription.getStatus(),Types.OTHER);
-
-
-        if(subscription instanceof SubscriptionWithEngagement){
-            insertStatement.setObject(8, SubscriptionType.subscription_with_engagement,Types.OTHER);
+            int rowAffected = insertStatement.executeUpdate();
+            return rowAffected;
         }
-        else
-            insertStatement.setObject(8, SubscriptionType.subscription_without_engagement,Types.OTHER);
 
-        int rowAffected = insertStatement.executeUpdate();
-
-            System.out.println(
-                    "Inserted data into 'subscriptions' table! row : "+rowAffected);
-
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
+        return 0;
     }
 
     @Override
     public int update(String id, Subscription subscription) throws SQLException {
 
-                String updateSQL = "UPDATE subscriptions SET monthlyamount = ?, startdate = ?, enddate = ?, monthsengagementperiod = ?,status = ? ,subscriptionType = ? WHERE id = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
+            String updateSQL = "UPDATE subscriptions SET monthlyamount = ?, startdate = ?, enddate = ?, monthsengagementperiod = ?,status = ? ,subscriptionType = ? WHERE id = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateSQL);
 
-        try{
             if(!id.trim().isEmpty() && subscription != null){
 
                 updateStatement.setFloat(1,subscription.getMonthlyAmount());
@@ -63,14 +52,8 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
                 updateStatement.setTimestamp(3,Helper.dateFormaterToDate(subscription.getEndDate()));
                 updateStatement.setInt(4,subscription.getMonthsEngagementPeriod());
                 updateStatement.setObject(5,subscription.getStatus(),Types.OTHER);
+                updateStatement.setObject(6, subscription.getSubscriptionType(),Types.OTHER);
                 updateStatement.setString(7,id);
-
-                if(subscription instanceof SubscriptionWithEngagement){
-                    updateStatement.setObject(6, SubscriptionType.subscription_with_engagement,Types.OTHER);
-                }
-                else if(subscription instanceof SubscriptionWithoutEngagement){
-                    updateStatement.setObject(6, SubscriptionType.subscription_without_engagement,Types.OTHER);
-                }
 
                 int rowAffected = updateStatement.executeUpdate();
                 updateStatement.close();
@@ -78,10 +61,6 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
                 return rowAffected;
 
             }
-
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
 
         return 0;
 
@@ -92,16 +71,21 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
 
         if(!id.trim().isEmpty()){
             String deleteSql = "DELETE FROM subscriptions WHERE id = ?";
+            String deletePaymentsSql = "DELETE FROM payments WHERE subscriptionid = ?";
+            connection.setAutoCommit(false);
+
             PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
+            deleteStatement.setString(1,id);
+            deleteStatement.executeUpdate();
 
-            try{
-                deleteStatement.setString(1,id);
-                int rowsAffected = deleteStatement.executeUpdate();
-                return rowsAffected;
+            PreparedStatement deletePaymentsStatement = connection.prepareStatement(deletePaymentsSql);
+            deletePaymentsStatement.setString(1,id);
+            deletePaymentsStatement.executeUpdate();
 
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
+            connection.commit();
+            connection.rollback();
+
+            return 1;
         }
         return 0;
 
@@ -111,8 +95,7 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
     public Subscription findById(String id) throws SQLException {
 
         String findOneSql = "SELECT * FROM subscriptions WHERE id = ?";
-
-        try (PreparedStatement findOneStatement = connection.prepareStatement(findOneSql)) {
+        PreparedStatement findOneStatement = connection.prepareStatement(findOneSql);
 
             findOneStatement.setString(1, id);
             ResultSet storedSubscription = findOneStatement.executeQuery();
@@ -142,9 +125,6 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
             }
             storedSubscription.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
@@ -155,7 +135,7 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
 
         String selectAllSql = "SELECT * FROM subscriptions";
 
-        try(Statement selectAllStatement = connection.createStatement()){
+        Statement selectAllStatement = connection.createStatement();
 
             ResultSet resultSet = selectAllStatement.executeQuery(selectAllSql);
 
@@ -188,9 +168,7 @@ public class SubscriptionDAO implements DAOInterface<Subscription,String> {
 
             }
 
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+
         return subscriptions;
     }
 
